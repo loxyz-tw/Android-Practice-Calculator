@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="android_icon">Android icon</string>
+    <string name="hello_world">
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+        Hello World! Hello World! Hello World! Hello World! Hello World! \n
+    </string>
+    <string name="next_button">Next</string>">
+    <string name="button_1" translatable="false">按鈕1</string>">
+    <string name="button_2">按鈕2</string>">
+    <string name="button_3">按鈕3</string>">
+    <string name="edittext_1">請輸入使用者名稱</string>">
+    <string name="edittext_2">請輸入密碼</string>">
+    <string name="button_login">登入</string>">
+    <string name="button_register">註冊</string>">
+    <string name="item_text_example">清單項目文字</string>
+    <string name="text_cal">計算機</string>
+</resources>
