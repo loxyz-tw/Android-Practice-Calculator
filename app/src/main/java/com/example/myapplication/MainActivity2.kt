@@ -24,7 +24,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             insets
         }
 
-        // 1. 準備固定的資料
+        // 1. 準備固定的50筆資料
         val myDataList = (1..50).map { "項目 $it" }
 
         // 2. 找到 RecyclerView
