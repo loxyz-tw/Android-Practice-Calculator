@@ -25,7 +25,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         }
 
         // 1. 準備固定的資料
-        val myDataList = (1..100).map { "項目 $it" }
+        val myDataList = (1..50).map { "項目 $it" }
 
         // 2. 找到 RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.my_recycler_view)
