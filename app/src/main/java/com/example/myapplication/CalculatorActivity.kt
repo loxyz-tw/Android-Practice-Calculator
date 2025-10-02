@@ -26,7 +26,7 @@ class CalculatorActivity : AppCompatActivity() {
         calculator = Calculator()
         displayText = findViewById(R.id.textview_display)
 
-        // 數字按鈕 (假設有 btn0 ~ btn9)
+        // 數字按鈕
         val numberButtons = listOf(
             R.id.button_0, R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5, R.id.button_6, R.id.button_7, R.id.button_8, R.id.button_9
         )

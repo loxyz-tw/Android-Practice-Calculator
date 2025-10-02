@@ -6,6 +6,7 @@ class Calculator {
     private var pendingOperator: String? = null
     private var isNewInput: Boolean = true
 
+    // 用來放在顯示區域的 String
     var display: String = "0"
         private set
 
