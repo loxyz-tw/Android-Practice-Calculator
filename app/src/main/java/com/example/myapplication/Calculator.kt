@@ -25,6 +25,7 @@ class Calculator {
         firstOperand = display.toIntOrNull()
         pendingOperator = operator
         isNewInput = true
+        display += operator
     }
 
     // 計算結果（?.let 寫法）
