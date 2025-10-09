@@ -114,7 +114,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         // 對於 Android 14 (API 34) 及以上，使用 READ_MEDIA_VISUAL_USER_SELECTED 權限
         // 對於較舊版本，使用 READ_EXTERNAL_STORAGE 權限
         val permission = if (android.os.Build.VERSION.SDK_INT >= 34) {
-            "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+            Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
