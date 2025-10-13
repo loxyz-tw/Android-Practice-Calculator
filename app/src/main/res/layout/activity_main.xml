@@ -30,12 +30,20 @@
         android:hint="@string/edittext_2"
         android:inputType="textPassword" />
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkbox_login"
+        app:layout_constraintTop_toBottomOf="@id/editText2"
+        app:layout_constraintStart_toStartOf="@id/editText2" />
+
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        app:layout_constraintTop_toBottomOf="@id/editText2"
+        app:layout_constraintTop_toBottomOf="@id/checkbox"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/button_login" />
 
@@ -43,8 +51,8 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
-        app:layout_constraintTop_toBottomOf="@id/editText2"
+        android:layout_marginStart="25dp"
+        app:layout_constraintTop_toTopOf="@id/button1"
         app:layout_constraintStart_toEndOf="@id/button1"
         android:text="@string/button_register" />
 
