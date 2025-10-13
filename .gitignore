@@ -1,17 +1,73 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-# User-specific configurations
-/.idea/misc.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# ----------------------------------------------------
+# 1. Gradle 檔案和目錄
+# ----------------------------------------------------
+.gradle/
+/build/
+**/build/
+
+# 本機設定檔案 (包含 SDK 路徑等個人配置)
 local.properties
+
+# Gradle wrapper 快取
+.wrapper/
+
+# ----------------------------------------------------
+# 2. Android Studio (IntelliJ IDEA) 相關檔案
+# ----------------------------------------------------
+.idea/
+# 由於 .idea/ 會忽略所有內容，如果想提交特定檔案 (例如 .idea/codeStyles/) 則需要以下例外，但通常不建議
+# !.idea/runConfigurations/
+# !.idea/codeStyles/
+
+# IntelliJ 模組檔案
+*.iml
+
+# ----------------------------------------------------
+# 3. 編譯產出與安裝檔案
+# ----------------------------------------------------
+# APK, AAB, JAR
+*.apk
+*.ap_
+*.aab
+*.jar
+*.class
+*.dex
+
+# 輸出中繼資料
+output-metadata.json
+
+# 測試覆蓋率報告
+/jacoco/
+
+# 截圖與錄影
+/captures/
+
+# ----------------------------------------------------
+# 4. 外部建置與原生開發 (NDK)
+# ----------------------------------------------------
+.externalNativeBuild/
+.cxx/
+/obj/
+/libs/  # 如果您在 libs/ 資料夾下存放大型二進位檔案 (例如 .so)
+
+# ----------------------------------------------------
+# 5. 專案安全與隱私相關檔案
+# ----------------------------------------------------
+# 金鑰儲存 (Keystore) 檔案
+*.jks
+*.keystore
+
+# Google 服務設定檔 (通常應忽略，除非團隊約定提交)
+# google-services.json 
+
+# ----------------------------------------------------
+# 6. 作業系統產生的檔案 (Windows/macOS)
+# ----------------------------------------------------
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Log 檔案
+*.log
