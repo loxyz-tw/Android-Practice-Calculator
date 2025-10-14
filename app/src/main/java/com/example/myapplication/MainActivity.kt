@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -14,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     val username = "roy"
     val password = "123456"
+    private lateinit var sharedPreferences: SharedPreferences
+    val PREFS_NAME = "MyAppPreferences"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +28,33 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val editText1 = findViewById<EditText>(R.id.editText1)
         val editText2 = findViewById<EditText>(R.id.editText2)
+        val checkbox = findViewById<com.google.android.material.checkbox.MaterialCheckBox>(R.id.checkbox)
+        // 1. 確保取出的值絕對不是 null
+        val usernameSaved = sharedPreferences.getString("username", "") ?: ""
+        // 2. 檢查是否為空字串並設定
+        if (usernameSaved.isNotEmpty()) {
+            editText1.setText(usernameSaved)
+            checkbox.isChecked = true
+        }
 
         val button1 = findViewById<Button>(R.id.button1)
         button1.setOnClickListener {
             // Handle button click event
             if (editText1.text.toString() == username && editText2.text.toString() == password) {
+                if (checkbox.isChecked) {
+                    sharedPreferences.edit().apply {
+                        putString("username", username)
+                        apply()
+                    }
+                } else {
+                    sharedPreferences.edit().apply {
+                        remove("username")
+                        apply()
+                    }
+                }
                 val intent = Intent(this, MainActivity2::class.java)
                 startActivity(intent)
                 Toast.makeText(this, "登入成功", Toast.LENGTH_LONG).show()
