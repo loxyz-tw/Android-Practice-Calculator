@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         // 2. 檢查是否為空字串並設定
         if (usernameSaved.isNotEmpty()) {
             editText1.setText(usernameSaved)
+            checkbox.isChecked = true
         }
 
         val button1 = findViewById<Button>(R.id.button1)
