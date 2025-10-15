@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.MyAdapter
@@ -57,15 +58,15 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                     if (saveImageToInternalStorage(selectedImageUri)) {
                         // 載入已保存的圖片
                         loadSavedImage()
-                        Toast.makeText(this, "成功選擇圖片！", Toast.LENGTH_SHORT).show()
+                        showSnackbar("成功選擇圖片！", Snackbar.LENGTH_SHORT)
                     } else {
-                        Toast.makeText(this, "儲存圖片失敗，請重試。", Toast.LENGTH_SHORT).show()
+                        showSnackbar("儲存圖片失敗，請重試。", Snackbar.LENGTH_LONG)
                     }
                 } else {
-                    Toast.makeText(this, "無法取得圖片。", Toast.LENGTH_SHORT).show()
+                    showSnackbar("無法取得圖片。", Snackbar.LENGTH_SHORT)
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this, "取消選擇圖片。", Toast.LENGTH_SHORT).show()
+                showSnackbar("取消選擇圖片。", Snackbar.LENGTH_SHORT)
             }
         }
 
@@ -402,5 +403,13 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             }
             .setCancelable(true) // 允許點擊外部區域取消
             .show()
+    }
+
+    /**
+     * 顯示 Snackbar 訊息
+     */
+    private fun showSnackbar(message: String, duration: Int) {
+        val rootView = findViewById<android.view.View>(R.id.main)
+        Snackbar.make(rootView, message, duration).show()
     }
 }
