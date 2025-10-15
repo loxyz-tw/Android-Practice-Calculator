@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -66,13 +67,24 @@ class MainActivity : AppCompatActivity() {
 
         val button2 = findViewById<Button>(R.id.button2)
         button2.setOnClickListener {
-            // Handle button click event
-            if (editText1.text.toString().isEmpty() || editText2.text.toString().isEmpty()) {
-                Toast.makeText(this, "請輸入使用者名稱和密碼", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this, "註冊成功", Toast.LENGTH_LONG).show()
-            }
+            // 顯示功能尚未完成的對話框
+            showRegistrationNotAvailableDialog()
         }
 
     }
+
+    /**
+     * 顯示註冊功能尚未完成的對話框
+     */
+    private fun showRegistrationNotAvailableDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("功能開發中")
+            .setMessage("註冊功能目前正在開發中，敬請期待！\n\n我們將在未來的版本中提供完整的註冊功能。")
+            .setPositiveButton("我知道了") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(true) // 允許點擊外部區域關閉
+            .show()
+    }
+
 }
