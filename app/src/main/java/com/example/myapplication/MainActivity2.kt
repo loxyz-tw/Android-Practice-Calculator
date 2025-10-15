@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -106,6 +107,9 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
         }
+
+        // 設定返回鍵處理
+        setupBackPressedHandler()
     }
 
     override fun onItemClick(position: Int, item: String) {
@@ -367,5 +371,36 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             // 沒有保存的圖片，顯示預設圖片
             profileImageView.setImageResource(R.mipmap.ic_launcher_round)
         }
+    }
+
+    /**
+     * 設定返回鍵處理器
+     */
+    private fun setupBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    /**
+     * 顯示離開應用程式的確認對話框
+     */
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("離開應用程式")
+            .setMessage("您確定要離開應用程式嗎？")
+            .setPositiveButton("離開") { _, _ ->
+                // 使用者確認離開，關閉應用程式
+                finishAffinity() // 關閉所有 Activity 並退出應用程式
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                // 使用者取消，關閉對話框
+                dialog.dismiss()
+            }
+            .setCancelable(true) // 允許點擊外部區域取消
+            .show()
     }
 }
