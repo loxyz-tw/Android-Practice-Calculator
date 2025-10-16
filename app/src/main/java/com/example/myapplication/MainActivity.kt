@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
     val username = "roy"
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
      * 顯示註冊功能尚未完成的對話框
      */
     private fun showRegistrationNotAvailableDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("功能開發中")
             .setMessage("註冊功能目前正在開發中，敬請期待！\n\n我們將在未來的版本中提供完整的註冊功能。")
             .setPositiveButton("我知道了") { dialog, _ ->

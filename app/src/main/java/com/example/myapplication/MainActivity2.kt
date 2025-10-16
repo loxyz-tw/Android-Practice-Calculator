@@ -16,7 +16,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,6 +31,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import androidx.core.graphics.scale
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
@@ -118,7 +118,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     }
 
     override fun onItemLongClick(position: Int, item: String) {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("選擇操作")
             .setItems(arrayOf("編輯", "刪除")) { _, which ->
                 when (which) {
@@ -189,7 +189,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
      * 顯示權限被拒絕的對話框，提供使用者選項
      */
     private fun showPermissionDeniedDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("需要圖片權限")
             .setMessage("為了選擇圖片，應用程式需要存取您的圖片權限。請前往設定頁面開啟權限，或選擇「不再詢問」來取消操作。")
             .setPositiveButton("前往設定") { _, _ ->
@@ -254,7 +254,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
      * 當沒有找到圖片選擇器應用程式時顯示對話框
      */
     private fun showNoGalleryAppDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("無法選擇圖片")
             .setMessage("您的裝置上沒有找到圖片選擇器應用程式。請安裝一個圖庫應用程式（如 Google Photos）或檔案管理器，然後重試。")
             .setPositiveButton("前往 Play 商店") { _, _ ->
@@ -390,7 +390,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
      * 顯示離開應用程式的確認對話框
      */
     private fun showExitConfirmationDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("離開應用程式")
             .setMessage("您確定要離開應用程式嗎？")
             .setPositiveButton("離開") { _, _ ->
