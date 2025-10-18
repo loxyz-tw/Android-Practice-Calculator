@@ -13,14 +13,15 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.MyAdapter
@@ -30,6 +31,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import androidx.core.graphics.scale
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
@@ -56,15 +58,15 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                     if (saveImageToInternalStorage(selectedImageUri)) {
                         // 載入已保存的圖片
                         loadSavedImage()
-                        Toast.makeText(this, "成功選擇圖片！", Toast.LENGTH_SHORT).show()
+                        showSnackbar("成功選擇圖片！", Snackbar.LENGTH_SHORT)
                     } else {
-                        Toast.makeText(this, "儲存圖片失敗，請重試。", Toast.LENGTH_SHORT).show()
+                        showSnackbar("儲存圖片失敗，請重試。", Snackbar.LENGTH_LONG)
                     }
                 } else {
-                    Toast.makeText(this, "無法取得圖片。", Toast.LENGTH_SHORT).show()
+                    showSnackbar("無法取得圖片。", Snackbar.LENGTH_SHORT)
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this, "取消選擇圖片。", Toast.LENGTH_SHORT).show()
+                showSnackbar("取消選擇圖片。", Snackbar.LENGTH_SHORT)
             }
         }
 
@@ -106,6 +108,9 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
         }
+
+        // 設定返回鍵處理
+        setupBackPressedHandler()
     }
 
     override fun onItemClick(position: Int, item: String) {
@@ -113,7 +118,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     }
 
     override fun onItemLongClick(position: Int, item: String) {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("選擇操作")
             .setItems(arrayOf("編輯", "刪除")) { _, which ->
                 when (which) {
@@ -184,7 +189,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
      * 顯示權限被拒絕的對話框，提供使用者選項
      */
     private fun showPermissionDeniedDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("需要圖片權限")
             .setMessage("為了選擇圖片，應用程式需要存取您的圖片權限。請前往設定頁面開啟權限，或選擇「不再詢問」來取消操作。")
             .setPositiveButton("前往設定") { _, _ ->
@@ -249,7 +254,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
      * 當沒有找到圖片選擇器應用程式時顯示對話框
      */
     private fun showNoGalleryAppDialog() {
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("無法選擇圖片")
             .setMessage("您的裝置上沒有找到圖片選擇器應用程式。請安裝一個圖庫應用程式（如 Google Photos）或檔案管理器，然後重試。")
             .setPositiveButton("前往 Play 商店") { _, _ ->
@@ -367,5 +372,44 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             // 沒有保存的圖片，顯示預設圖片
             profileImageView.setImageResource(R.mipmap.ic_launcher_round)
         }
+    }
+
+    /**
+     * 設定返回鍵處理器
+     */
+    private fun setupBackPressedHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    /**
+     * 顯示離開應用程式的確認對話框
+     */
+    private fun showExitConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("離開應用程式")
+            .setMessage("您確定要離開應用程式嗎？")
+            .setPositiveButton("離開") { _, _ ->
+                // 使用者確認離開，關閉應用程式
+                finishAffinity() // 關閉所有 Activity 並退出應用程式
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                // 使用者取消，關閉對話框
+                dialog.dismiss()
+            }
+            .setCancelable(true) // 允許點擊外部區域取消
+            .show()
+    }
+
+    /**
+     * 顯示 Snackbar 訊息
+     */
+    private fun showSnackbar(message: String, duration: Int) {
+        val rootView = findViewById<android.view.View>(R.id.main)
+        Snackbar.make(rootView, message, duration).show()
     }
 }
