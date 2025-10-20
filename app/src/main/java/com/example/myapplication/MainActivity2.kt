@@ -468,23 +468,23 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                             currencyDataList.clear()
                             
                             // 解析所有貨幣匯率
-                            val currencyNames = mapOf(
-                                "usd" to "美元",
-                                "eur" to "歐元", 
-                                "jpy" to "日圓",
-                                "gbp" to "英鎊",
-                                "aud" to "澳幣",
-                                "cad" to "加幣",
-                                "chf" to "瑞士法郎",
-                                "cny" to "人民幣",
-                                "hkd" to "港幣",
-                                "krw" to "韓圓"
+                            val currencyInfo = mapOf(
+                                "usd" to Pair("美元", "🇺🇸"),
+                                "eur" to Pair("歐元", "🇪🇺"), 
+                                "jpy" to Pair("日圓", "🇯🇵"),
+                                "gbp" to Pair("英鎊", "🇬🇧"),
+                                "aud" to Pair("澳幣", "🇦🇺"),
+                                "cad" to Pair("加幣", "🇨🇦"),
+                                "chf" to Pair("瑞士法郎", "🇨🇭"),
+                                "cny" to Pair("人民幣", "🇨🇳"),
+                                "hkd" to Pair("港幣", "🇭🇰"),
+                                "krw" to Pair("韓圓", "🇰🇷")
                             )
                             
-                            for ((code, name) in currencyNames) {
+                            for ((code, info) in currencyInfo) {
                                 if (twdObject.has(code)) {
                                     val rate = twdObject.getDouble(code)
-                                    currencyDataList.add(CurrencyData(code.uppercase(), name, rate))
+                                    currencyDataList.add(CurrencyData(code.uppercase(), info.first, rate, info.second))
                                 }
                             }
                             

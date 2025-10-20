@@ -20,6 +20,7 @@ class MyAdapter(private val currencyData: List<CurrencyData>, private val onItem
 
     // 2. 定義 ViewHolder，它會持有每個清單項目的 View
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val flagText: TextView = itemView.findViewById(R.id.textView_flag)
         val currencyCodeText: TextView = itemView.findViewById(R.id.textView_currency_code)
         val currencyNameText: TextView = itemView.findViewById(R.id.textView_currency_name)
         val rateText: TextView = itemView.findViewById(R.id.textView_rate)
@@ -37,6 +38,7 @@ class MyAdapter(private val currencyData: List<CurrencyData>, private val onItem
     // 當清單項目 View 準備好時，這個方法會被呼叫，將資料填入到 View 中
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currency = currencyData[position]
+        holder.flagText.text = currency.flag
         holder.currencyCodeText.text = currency.currencyCode
         holder.currencyNameText.text = currency.currencyName
         holder.rateText.text = String.format("%.4f", currency.rate)
