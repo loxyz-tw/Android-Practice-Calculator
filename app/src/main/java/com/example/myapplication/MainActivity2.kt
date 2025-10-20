@@ -40,11 +40,16 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import kotlin.collections.mutableListOf
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MyAdapter
+    private val currencyDataList = mutableListOf<CurrencyData>()
+    
     // 1. 建立 OkHttpClient 實例 (建議單例模式，提升效能)
     val client = OkHttpClient()
     // 2. 建立 Request 物件
@@ -105,17 +110,15 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         // 載入已保存的圖片
         loadSavedImage()
 
-        // 1. 準備固定的50筆資料
-        val myDataList = (1..50).map { "項目 $it" }
+        // 1. 找到 RecyclerView
+        recyclerView = findViewById(R.id.my_recycler_view)
 
-        // 2. 找到 RecyclerView
-        val recyclerView: RecyclerView = findViewById(R.id.my_recycler_view)
-
-        // 3. 設定 LayoutManager
+        // 2. 設定 LayoutManager
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 4. 設定 Adapter
-        recyclerView.adapter = MyAdapter(myDataList, this)
+        // 3. 初始化 Adapter 並設定
+        adapter = MyAdapter(currencyDataList, this)
+        recyclerView.adapter = adapter
 
         val buttonCal = findViewById<Button>(R.id.buttonCal)
         buttonCal.setOnClickListener {
@@ -129,28 +132,37 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         setupBackPressedHandler()
     }
 
-    override fun onItemClick(position: Int, item: String) {
-        Toast.makeText(this, "點擊了: $item (位置: $position)", Toast.LENGTH_SHORT).show()
+    override fun onItemClick(position: Int, item: CurrencyData) {
+        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${item.rate})", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemLongClick(position: Int, item: String) {
+    override fun onItemLongClick(position: Int, item: CurrencyData) {
         MaterialAlertDialogBuilder(this)
             .setTitle("選擇操作")
-            .setItems(arrayOf("編輯", "刪除")) { _, which ->
+            .setItems(arrayOf("查看詳情", "複製匯率")) { _, which ->
                 when (which) {
-                    0 -> editItem(position, item)
-                    1 -> deleteItem(position, item)
+                    0 -> showCurrencyDetails(item)
+                    1 -> copyRateToClipboard(item)
                 }
             }
             .show()
     }
 
-    private fun editItem(position: Int, item: String) {
-        Toast.makeText(this, "編輯: $item", Toast.LENGTH_SHORT).show()
+    private fun showCurrencyDetails(item: CurrencyData) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("匯率詳情")
+            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${item.rate}")
+            .setPositiveButton("確定") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
-    private fun deleteItem(position: Int, item: String) {
-        Toast.makeText(this, "刪除: $item", Toast.LENGTH_SHORT).show()
+    private fun copyRateToClipboard(item: CurrencyData) {
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${item.rate}")
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "已複製 ${item.currencyCode} 匯率到剪貼簿", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -437,21 +449,56 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                     e: IOException,
                 ) {
                     println("failed: $e")
+                    runOnUiThread {
+                        showSnackbar("無法取得匯率資料", Snackbar.LENGTH_LONG)
+                    }
                 }
 
                 override fun onResponse(
                     call: Call,
                     response: Response,
                 ) {
-//                    println("response: ${response.code}")
-//                    println("response: ${response.body.string()}")
                     try {
-                        val jsonObject = JSONObject(response.body.string());
-                        // Now you can access data from the jsonObject
-                        val value = JSONObject(jsonObject.getString("twd")).optDouble("eur")
-                        println("response: $value")
+                        val responseBody = response.body?.string()
+                        if (responseBody != null) {
+                            val jsonObject = JSONObject(responseBody)
+                            val twdObject = jsonObject.getJSONObject("twd")
+                            
+                            // 清空現有資料
+                            currencyDataList.clear()
+                            
+                            // 解析所有貨幣匯率
+                            val currencyNames = mapOf(
+                                "usd" to "美元",
+                                "eur" to "歐元", 
+                                "jpy" to "日圓",
+                                "gbp" to "英鎊",
+                                "aud" to "澳幣",
+                                "cad" to "加幣",
+                                "chf" to "瑞士法郎",
+                                "cny" to "人民幣",
+                                "hkd" to "港幣",
+                                "krw" to "韓圓"
+                            )
+                            
+                            for ((code, name) in currencyNames) {
+                                if (twdObject.has(code)) {
+                                    val rate = twdObject.getDouble(code)
+                                    currencyDataList.add(CurrencyData(code.uppercase(), name, rate))
+                                }
+                            }
+                            
+                            // 更新 UI
+                            runOnUiThread {
+                                adapter.notifyDataSetChanged()
+                                showSnackbar("已載入 ${currencyDataList.size} 種貨幣匯率", Snackbar.LENGTH_SHORT)
+                            }
+                        }
                     } catch (e: JSONException) {
-                        e.printStackTrace();
+                        e.printStackTrace()
+                        runOnUiThread {
+                            showSnackbar("解析匯率資料失敗", Snackbar.LENGTH_LONG)
+                        }
                     }
                     response.close()
                 }
