@@ -32,11 +32,25 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import androidx.core.graphics.scale
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var sharedPreferences: SharedPreferences
+    // 1. 建立 OkHttpClient 實例 (建議單例模式，提升效能)
+    val client = OkHttpClient()
+    // 2. 建立 Request 物件
+    val request = Request.Builder()
+        .url("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/twd.json")
+        .build()
 
     // 常量定義，在 Kotlin 中通常放在 companion object 內
     companion object {
@@ -108,6 +122,8 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
         }
+
+        getCurrencyData()
 
         // 設定返回鍵處理
         setupBackPressedHandler()
@@ -411,5 +427,35 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     private fun showSnackbar(message: String, duration: Int) {
         val rootView = findViewById<android.view.View>(R.id.main)
         Snackbar.make(rootView, message, duration).show()
+    }
+
+    private fun getCurrencyData() {
+        client.newCall(request).enqueue(
+            object : Callback {
+                override fun onFailure(
+                    call: Call,
+                    e: IOException,
+                ) {
+                    println("failed: $e")
+                }
+
+                override fun onResponse(
+                    call: Call,
+                    response: Response,
+                ) {
+//                    println("response: ${response.code}")
+//                    println("response: ${response.body.string()}")
+                    try {
+                        val jsonObject = JSONObject(response.body.string());
+                        // Now you can access data from the jsonObject
+                        val value = JSONObject(jsonObject.getString("twd")).optDouble("eur")
+                        println("response: $value")
+                    } catch (e: JSONException) {
+                        e.printStackTrace();
+                    }
+                    response.close()
+                }
+            },
+        )
     }
 }
