@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.CurrencyData
+import java.util.Locale
 
 // 1. 定義你的資料
 class MyAdapter(private val currencyData: List<CurrencyData>, private val onItemClickListener: OnItemClickListener? = null) :
@@ -41,7 +42,9 @@ class MyAdapter(private val currencyData: List<CurrencyData>, private val onItem
         holder.flagText.text = currency.flag
         holder.currencyCodeText.text = currency.currencyCode
         holder.currencyNameText.text = currency.currencyName
-        holder.rateText.text = String.format("%.4f", currency.rate)
+        // 計算反向匯率 (1/rate)
+        val reverseRate = 1.0 / currency.rate
+        holder.rateText.text = String.format(Locale.getDefault(), "%.4f/%.2f", currency.rate, reverseRate)
 
         // 設置點擊監聽器
         holder.itemView.setOnClickListener {

@@ -133,7 +133,8 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int, item: CurrencyData) {
-        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${item.rate})", Toast.LENGTH_SHORT).show()
+        val reverseRate = 1.0 / item.rate
+        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)})", Toast.LENGTH_SHORT).show()
     }
 
     override fun onItemLongClick(position: Int, item: CurrencyData) {
@@ -149,9 +150,10 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     }
 
     private fun showCurrencyDetails(item: CurrencyData) {
+        val reverseRate = 1.0 / item.rate
         MaterialAlertDialogBuilder(this)
             .setTitle("匯率詳情")
-            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${item.rate}")
+            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
             .setPositiveButton("確定") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -159,8 +161,9 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     }
 
     private fun copyRateToClipboard(item: CurrencyData) {
+        val reverseRate = 1.0 / item.rate
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${item.rate}")
+        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, "已複製 ${item.currencyCode} 匯率到剪貼簿", Toast.LENGTH_SHORT).show()
     }

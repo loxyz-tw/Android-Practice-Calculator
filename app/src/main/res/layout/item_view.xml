@@ -49,7 +49,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#2196F3"
-        tools:text="31.2345"
+        tools:text="0.0326/30.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textView_currency_code"
         app:layout_constraintBottom_toBottomOf="@id/textView_currency_code" />
