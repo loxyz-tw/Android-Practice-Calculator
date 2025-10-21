@@ -26,7 +26,8 @@
         android:textStyle="bold"
         tools:text="USD"
         app:layout_constraintStart_toEndOf="@id/textView_flag"
-        app:layout_constraintTop_toTopOf="@id/textView_flag" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/textView_currency_name"
