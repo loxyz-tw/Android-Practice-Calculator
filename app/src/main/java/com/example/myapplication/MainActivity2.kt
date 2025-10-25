@@ -469,11 +469,11 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                             
                             // 清空現有資料
                             currencyDataList.clear()
-                            
+
                             // 解析所有貨幣匯率
                             val currencyInfo = mapOf(
                                 "usd" to Pair("美元", "🇺🇸"),
-                                "eur" to Pair("歐元", "🇪🇺"), 
+                                "eur" to Pair("歐元", "🇪🇺"),
                                 "jpy" to Pair("日圓", "🇯🇵"),
                                 "gbp" to Pair("英鎊", "🇬🇧"),
                                 "aud" to Pair("澳幣", "🇦🇺"),
@@ -481,7 +481,9 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
                                 "chf" to Pair("瑞士法郎", "🇨🇭"),
                                 "cny" to Pair("人民幣", "🇨🇳"),
                                 "hkd" to Pair("港幣", "🇭🇰"),
-                                "krw" to Pair("韓圓", "🇰🇷")
+                                "krw" to Pair("韓圓", "🇰🇷"),
+                                "sgd" to Pair("新加坡幣", "🇸🇬"),
+                                "thb" to Pair("泰幣", "🇹🇭"),
                             )
                             
                             for ((code, info) in currencyInfo) {
