@@ -44,6 +44,10 @@ class CalculatorActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_sub).setOnClickListener { onOperatorClicked("-") }
         findViewById<Button>(R.id.button_mul).setOnClickListener { onOperatorClicked("×") }
         findViewById<Button>(R.id.button_div).setOnClickListener { onOperatorClicked("÷") }
+        findViewById<Button>(R.id.button_point).setOnClickListener {
+            calculator.inputDecimal()
+            updateDisplay()
+        }
 
         // 等號
         findViewById<Button>(R.id.button_equal).setOnClickListener {
