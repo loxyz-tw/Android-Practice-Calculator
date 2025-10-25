@@ -32,11 +32,30 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import androidx.core.graphics.scale
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import kotlin.collections.mutableListOf
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MyAdapter
+    private val currencyDataList = mutableListOf<CurrencyData>()
+    
+    // 1. 建立 OkHttpClient 實例 (建議單例模式，提升效能)
+    val client = OkHttpClient()
+    // 2. 建立 Request 物件
+    val request = Request.Builder()
+        .url("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/twd.json")
+        .build()
 
     // 常量定義，在 Kotlin 中通常放在 companion object 內
     companion object {
@@ -91,17 +110,15 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         // 載入已保存的圖片
         loadSavedImage()
 
-        // 1. 準備固定的50筆資料
-        val myDataList = (1..50).map { "項目 $it" }
+        // 1. 找到 RecyclerView
+        recyclerView = findViewById(R.id.my_recycler_view)
 
-        // 2. 找到 RecyclerView
-        val recyclerView: RecyclerView = findViewById(R.id.my_recycler_view)
-
-        // 3. 設定 LayoutManager
+        // 2. 設定 LayoutManager
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 4. 設定 Adapter
-        recyclerView.adapter = MyAdapter(myDataList, this)
+        // 3. 初始化 Adapter 並設定
+        adapter = MyAdapter(currencyDataList, this)
+        recyclerView.adapter = adapter
 
         val buttonCal = findViewById<Button>(R.id.buttonCal)
         buttonCal.setOnClickListener {
@@ -109,32 +126,46 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
             startActivity(intent)
         }
 
+        getCurrencyData()
+
         // 設定返回鍵處理
         setupBackPressedHandler()
     }
 
-    override fun onItemClick(position: Int, item: String) {
-        Toast.makeText(this, "點擊了: $item (位置: $position)", Toast.LENGTH_SHORT).show()
+    override fun onItemClick(position: Int, item: CurrencyData) {
+        val reverseRate = 1.0 / item.rate
+        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)})", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemLongClick(position: Int, item: String) {
+    override fun onItemLongClick(position: Int, item: CurrencyData) {
         MaterialAlertDialogBuilder(this)
             .setTitle("選擇操作")
-            .setItems(arrayOf("編輯", "刪除")) { _, which ->
+            .setItems(arrayOf("查看詳情", "複製匯率")) { _, which ->
                 when (which) {
-                    0 -> editItem(position, item)
-                    1 -> deleteItem(position, item)
+                    0 -> showCurrencyDetails(item)
+                    1 -> copyRateToClipboard(item)
                 }
             }
             .show()
     }
 
-    private fun editItem(position: Int, item: String) {
-        Toast.makeText(this, "編輯: $item", Toast.LENGTH_SHORT).show()
+    private fun showCurrencyDetails(item: CurrencyData) {
+        val reverseRate = 1.0 / item.rate
+        MaterialAlertDialogBuilder(this)
+            .setTitle("匯率詳情")
+            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
+            .setPositiveButton("確定") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
-    private fun deleteItem(position: Int, item: String) {
-        Toast.makeText(this, "刪除: $item", Toast.LENGTH_SHORT).show()
+    private fun copyRateToClipboard(item: CurrencyData) {
+        val reverseRate = 1.0 / item.rate
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "已複製 ${item.currencyCode} 匯率到剪貼簿", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -411,5 +442,72 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     private fun showSnackbar(message: String, duration: Int) {
         val rootView = findViewById<android.view.View>(R.id.main)
         Snackbar.make(rootView, message, duration).show()
+    }
+
+    private fun getCurrencyData() {
+        client.newCall(request).enqueue(
+            object : Callback {
+                override fun onFailure(
+                    call: Call,
+                    e: IOException,
+                ) {
+                    println("failed: $e")
+                    runOnUiThread {
+                        showSnackbar("無法取得匯率資料", Snackbar.LENGTH_LONG)
+                    }
+                }
+
+                override fun onResponse(
+                    call: Call,
+                    response: Response,
+                ) {
+                    try {
+                        val responseBody = response.body?.string()
+                        if (responseBody != null) {
+                            val jsonObject = JSONObject(responseBody)
+                            val twdObject = jsonObject.getJSONObject("twd")
+                            
+                            // 清空現有資料
+                            currencyDataList.clear()
+
+                            // 解析所有貨幣匯率
+                            val currencyInfo = mapOf(
+                                "usd" to Pair("美元", "🇺🇸"),
+                                "eur" to Pair("歐元", "🇪🇺"),
+                                "jpy" to Pair("日圓", "🇯🇵"),
+                                "gbp" to Pair("英鎊", "🇬🇧"),
+                                "aud" to Pair("澳幣", "🇦🇺"),
+                                "cad" to Pair("加幣", "🇨🇦"),
+                                "chf" to Pair("瑞士法郎", "🇨🇭"),
+                                "cny" to Pair("人民幣", "🇨🇳"),
+                                "hkd" to Pair("港幣", "🇭🇰"),
+                                "krw" to Pair("韓圓", "🇰🇷"),
+                                "sgd" to Pair("新加坡幣", "🇸🇬"),
+                                "thb" to Pair("泰幣", "🇹🇭"),
+                            )
+                            
+                            for ((code, info) in currencyInfo) {
+                                if (twdObject.has(code)) {
+                                    val rate = twdObject.getDouble(code)
+                                    currencyDataList.add(CurrencyData(code.uppercase(), info.first, rate, info.second))
+                                }
+                            }
+                            
+                            // 更新 UI
+                            runOnUiThread {
+                                adapter.notifyDataSetChanged()
+                                showSnackbar("已載入 ${currencyDataList.size} 種貨幣匯率", Snackbar.LENGTH_SHORT)
+                            }
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        runOnUiThread {
+                            showSnackbar("解析匯率資料失敗", Snackbar.LENGTH_LONG)
+                        }
+                    }
+                    response.close()
+                }
+            },
+        )
     }
 }

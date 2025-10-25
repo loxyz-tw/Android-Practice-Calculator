@@ -8,6 +8,7 @@
     <!-- 對於較舊版本 Android 的向後兼容性 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- 宣告可以查詢的應用程式類型，用於圖片選擇功能 -->
     <queries>

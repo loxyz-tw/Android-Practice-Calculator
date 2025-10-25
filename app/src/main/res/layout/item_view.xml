@@ -2,31 +2,56 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/image"
+    <TextView
+        android:id="@+id/textView_flag"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_margin="15dp"
-        android:src="@drawable/ic_launcher"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:text="🇺🇸"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
-        android:id="@+id/textView_title"
+        android:id="@+id/textView_currency_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginStart="12dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="@string/item_text_example"
-        app:layout_constraintStart_toEndOf="@id/image"
+        tools:text="USD"
+        app:layout_constraintStart_toEndOf="@id/textView_flag"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/textView_currency_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        tools:text="美元"
+        app:layout_constraintStart_toEndOf="@id/textView_currency_code"
+        app:layout_constraintTop_toTopOf="@id/textView_currency_code"
+        app:layout_constraintEnd_toStartOf="@id/textView_rate"
+        app:layout_constraintBottom_toBottomOf="@id/textView_currency_code" />
+
+    <TextView
+        android:id="@+id/textView_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#2196F3"
+        tools:text="0.0326/30.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textView_currency_code"
+        app:layout_constraintBottom_toBottomOf="@id/textView_currency_code" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
