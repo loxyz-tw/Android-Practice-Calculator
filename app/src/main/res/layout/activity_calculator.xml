@@ -25,31 +25,41 @@
             android:id="@+id/button_0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
             android:text="0"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_clear"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@id/button_1"
+            app:layout_constraintStart_toStartOf="@id/button_1" />
+
+        <Button
+            android:id="@+id/button_point"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:text="."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/button_2"
+            app:layout_constraintStart_toStartOf="@id/button_2" />
 
         <Button
             android:id="@+id/button_clear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
             android:text="C"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_equal"
-            app:layout_constraintStart_toEndOf="@id/button_0" />
+            app:layout_constraintBottom_toTopOf="@id/button_7"
+            app:layout_constraintStart_toStartOf="@id/button_7"
+            app:layout_constraintEnd_toEndOf="@id/button_9" />
 
         <Button
             android:id="@+id/button_equal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
             android:text="="
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_add"
-            app:layout_constraintStart_toEndOf="@id/button_clear" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/button_3" />
 
         <Button
             android:id="@+id/button_add"
@@ -57,8 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="+"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_equal"
+            app:layout_constraintBottom_toTopOf="@id/button_equal"
+            app:layout_constraintStart_toEndOf="@id/button_3"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
@@ -77,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="2"
-            app:layout_constraintBottom_toTopOf="@id/button_clear"
+            app:layout_constraintBottom_toTopOf="@id/button_point"
             app:layout_constraintEnd_toStartOf="@id/button_3"
             app:layout_constraintStart_toEndOf="@id/button_1" />
 
@@ -87,8 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="3"
-            app:layout_constraintBottom_toTopOf="@id/button_clear"
-            app:layout_constraintEnd_toStartOf="@id/button_sub"
+            app:layout_constraintBottom_toTopOf="@id/button_point"
+            app:layout_constraintEnd_toStartOf="@id/button_add"
             app:layout_constraintStart_toEndOf="@id/button_2" />
 
         <Button
@@ -97,9 +107,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="-"
-            app:layout_constraintBottom_toTopOf="@id/button_clear"
+            app:layout_constraintBottom_toTopOf="@id/button_add"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_3" />
+            app:layout_constraintStart_toEndOf="@id/button_6" />
 
         <Button
             android:id="@+id/button_4"
@@ -128,7 +138,7 @@
             android:layout_margin="5dp"
             android:text="6"
             app:layout_constraintBottom_toTopOf="@id/button_3"
-            app:layout_constraintEnd_toStartOf="@id/button_mul"
+            app:layout_constraintEnd_toStartOf="@id/button_sub"
             app:layout_constraintStart_toEndOf="@id/button_5" />
 
         <Button
@@ -139,7 +149,7 @@
             android:text="x"
             app:layout_constraintBottom_toTopOf="@id/button_sub"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_6" />
+            app:layout_constraintStart_toEndOf="@id/button_9" />
 
         <Button
             android:id="@+id/button_7"
@@ -168,18 +178,18 @@
             android:layout_margin="5dp"
             android:text="9"
             app:layout_constraintBottom_toTopOf="@id/button_6"
-            app:layout_constraintEnd_toStartOf="@id/button_div"
+            app:layout_constraintEnd_toStartOf="@id/button_mul"
             app:layout_constraintStart_toEndOf="@id/button_8" />
 
         <Button
             android:id="@+id/button_div"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
             android:text="÷"
             app:layout_constraintBottom_toTopOf="@id/button_mul"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_9" />
+            app:layout_constraintEnd_toEndOf="@id/button_mul"
+            app:layout_constraintStart_toStartOf="@id/button_mul" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

@@ -40,6 +40,7 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Locale
 import kotlin.collections.mutableListOf
 
 class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
@@ -134,7 +135,8 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
 
     override fun onItemClick(position: Int, item: CurrencyData) {
         val reverseRate = 1.0 / item.rate
-        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)})", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "點擊了: ${item.currencyCode} - ${item.currencyName} (匯率: ${String.format(
+            Locale.getDefault(), "%.4f/%.1f", item.rate, reverseRate)})", Toast.LENGTH_SHORT).show()
     }
 
     override fun onItemLongClick(position: Int, item: CurrencyData) {
@@ -153,7 +155,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
         val reverseRate = 1.0 / item.rate
         MaterialAlertDialogBuilder(this)
             .setTitle("匯率詳情")
-            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
+            .setMessage("貨幣代碼: ${item.currencyCode}\n貨幣名稱: ${item.currencyName}\n匯率: ${String.format(Locale.getDefault(), "%.4f/%.2f", item.rate, reverseRate)}")
             .setPositiveButton("確定") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -163,7 +165,7 @@ class MainActivity2 : AppCompatActivity(), MyAdapter.OnItemClickListener {
     private fun copyRateToClipboard(item: CurrencyData) {
         val reverseRate = 1.0 / item.rate
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${String.format("%.4f/%.1f", item.rate, reverseRate)}")
+        val clip = android.content.ClipData.newPlainText("匯率", "${item.currencyCode}: ${String.format(Locale.getDefault(), "%.4f/%.2f", item.rate, reverseRate)}")
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, "已複製 ${item.currencyCode} 匯率到剪貼簿", Toast.LENGTH_SHORT).show()
     }
